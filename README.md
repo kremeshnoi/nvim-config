@@ -2,6 +2,8 @@
 
 A comprehensive, portable Neovim configuration designed for efficient development across multiple environments.
 
+<img width="3839" height="2085" alt="image" src="https://github.com/user-attachments/assets/497e8b49-081e-4993-be9e-31f3b7684793" />
+
 ## Overview
 
 This repository contains a carefully crafted Neovim configuration that provides a consistent, feature-rich development environment. The configuration emphasizes productivity, maintainability, and ease of deployment across different systems.
@@ -14,7 +16,6 @@ This repository contains a carefully crafted Neovim configuration that provides 
 - **Nerd Font**: Required for proper icon rendering ([Download](https://www.nerdfonts.com/))
 - **Python Virtual Environment**: python3.10-venv package
 - **Ripgrep**: Enhanced grep searching functionality with Telescope ([Installation](https://github.com/BurntSushi/ripgrep))
-
 
 ## Installation
 
