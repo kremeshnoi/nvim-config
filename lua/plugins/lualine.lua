@@ -6,22 +6,42 @@ return {
     "nvim-tree/nvim-web-devicons",
   },
   config = function()
-    vim.opt.laststatus = 3
-
     require("lualine").setup {
       options = {
+        theme = "vscode",
         icons_enabled = true,
+        globalstatus = true,
         section_separators = "",
         component_separators = "",
-        globalstatus = true,
+        disabled_filetypes = {
+          winbar = {
+            "NvimTree",
+          },
+        },
+      },
+      winbar = {
+        lualine_a = {},
+        lualine_b = {},
+        lualine_c = {},
+        lualine_x = { "branch" },
+        lualine_y = { "encoding" },
+        lualine_z = {},
+      },
+      inactive_winbar = {
+        lualine_a = {},
+        lualine_b = {},
+        lualine_c = {},
+        lualine_x = { "branch" },
+        lualine_y = { "encoding" },
+        lualine_z = {},
       },
       sections = {
         lualine_a = {},
         lualine_b = {},
         lualine_c = {},
-        lualine_x = { { "filename", path = 1 }, "branch", "encoding", "filetype" },
-        lualine_y = { "location" },
-        lualine_z = { "mode" },
+        lualine_x = {},
+        lualine_y = {},
+        lualine_z = {},
       },
       inactive_sections = {
         lualine_a = {},
@@ -31,6 +51,7 @@ return {
         lualine_y = {},
         lualine_z = {},
       },
+
       extensions = {},
     }
   end,

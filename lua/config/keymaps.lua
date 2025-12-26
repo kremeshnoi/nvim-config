@@ -1,6 +1,5 @@
 local keymap = vim.keymap
 
--- Lazy-safe telescope accessor
 local function telescope()
   return require "telescope.builtin"
 end
@@ -8,17 +7,14 @@ end
 -- General
 keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Clear search highlight" })
 
--- Open URL under cursor (Linux)
-keymap.set("n", "gx", "<cmd>silent !xdg-open <cfile> &<CR>", { desc = "Open URL under cursor" })
-
 -- Window focus
 keymap.set("n", "<C-h>", "<C-w>h", { desc = "Focus left window" })
 keymap.set("n", "<C-l>", "<C-w>l", { desc = "Focus right window" })
 keymap.set("n", "<C-j>", "<C-w>j", { desc = "Focus down window" })
 keymap.set("n", "<C-k>", "<C-w>k", { desc = "Focus up window" })
 
--- Telescope: two-letter "f*" layer
--- LSP Pickers
+-- Telescope
+-- LSP
 keymap.set("n", "<leader>fr", function()
   telescope().lsp_references()
 end, { desc = "LSP References" })
@@ -31,33 +27,29 @@ keymap.set("n", "<leader>fd", function()
   telescope().lsp_definitions()
 end, { desc = "LSP Definitions" })
 
-keymap.set("n", "<leader>f1", function()
+keymap.set("n", "<leader>fl", function()
   telescope().lsp_incoming_calls()
 end, { desc = "LSP Incoming calls" })
 
-keymap.set("n", "<leader>f0", function()
+keymap.set("n", "<leader>fh", function()
   telescope().lsp_outgoing_calls()
 end, { desc = "LSP Outgoing calls" })
 
 keymap.set("n", "<leader>fe", function()
-  telescope().diagnostics { bufnr = 0 }
-end, { desc = "LSP Document Diagnostics" })
-
-keymap.set("n", "<leader>fee", function()
   telescope().diagnostics { bufnr = nil }
 end, { desc = "LSP Workspace Diagnostics" })
 
--- Vim Pickers
+-- Vim
 keymap.set("n", "<leader>fk", function()
   telescope().keymaps()
 end, { desc = "Keymaps" })
 
--- Git Pickers
-keymap.set("n", "<leader>fcc", function()
+-- Git
+keymap.set("n", "<leader>fc", function()
   telescope().git_commits()
 end, { desc = "Git Commits" })
 
-keymap.set("n", "<leader>fc", function()
+keymap.set("n", "<leader>fw", function()
   telescope().git_bcommits()
 end, { desc = "Git Buffer Commits" })
 
@@ -74,14 +66,6 @@ keymap.set("n", "<leader>fo", function()
   telescope().find_files()
 end, { desc = "Find Files" })
 
-keymap.set("n", "<leader>fq", function()
-  telescope().git_files()
-end, { desc = "Git Files" })
-
-keymap.set("n", "<leader>fp", function()
-  telescope().grep_string()
-end, { desc = "Grep String" })
-
 keymap.set("n", "<leader>ff", function()
   telescope().live_grep()
 end, { desc = "Live Grep" })
@@ -91,18 +75,15 @@ keymap.set("n", "<leader>f/", function()
 end, { desc = "Fuzzy in current buffer" })
 
 -- Tabs
-keymap.set("n", "<A-,>", "<Cmd>BufferPrevious<CR>", { desc = "Previous buffer" })
-keymap.set("n", "<A-.>", "<Cmd>BufferNext<CR>", { desc = "Next buffer" })
-keymap.set("n", "<A-c>", "<Cmd>BufferClose<CR>", { desc = "Close buffer" })
-keymap.set("n", "<A-cx>", "<Cmd>BufferCloseAllButCurrent<CR>", { desc = "Close all but current buffer" })
+keymap.set("n", "<A-h>", "<Cmd>BufferPrevious<CR>", { desc = "Previous buffer" })
+keymap.set("n", "<A-l>", "<Cmd>BufferNext<CR>", { desc = "Next buffer" })
+keymap.set("n", "<A-x>", "<Cmd>BufferClose<CR>", { desc = "Close buffer" })
+keymap.set("n", "<A-xa>", "<Cmd>BufferCloseAllButCurrent<CR>", { desc = "Close all but current buffer" })
 
 for i = 1, 9 do
   keymap.set("n", "<A-" .. i .. ">", "<Cmd>BufferGoto " .. i .. "<CR>", { desc = "Go to buffer " .. i })
 end
 keymap.set("n", "<A-0>", "<Cmd>BufferLast<CR>", { desc = "Go to last buffer" })
-
--- Git
-keymap.set("n", "<leader>gb", ":GitBlameToggle<CR>", { desc = "Toggle git blame" })
 
 -- Refactoring
 keymap.set("n", "<leader>rr", function()
@@ -120,8 +101,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
       keymap.set(mode, lhs, rhs, opts)
     end
 
-    map("n", "<leader>d", vim.lsp.buf.definition, "Go to definition")
-    map("n", "<leader>dd", vim.lsp.buf.declaration, "Go to declaration")
+    map("n", "<leader>dd", vim.lsp.buf.definition, "Go to definition")
+    map("n", "<leader>da", vim.lsp.buf.declaration, "Go to declaration")
     map("n", "<leader>dr", function()
       require("telescope.builtin").lsp_references()
     end, "References")
@@ -129,11 +110,11 @@ vim.api.nvim_create_autocmd("LspAttach", {
       require("telescope.builtin").lsp_implementations()
     end, "Implementation")
     map("n", "<leader>dk", vim.lsp.buf.hover, "Hover")
-    map("n", "<leader>dr", vim.lsp.buf.rename, "Rename")
-    map({ "n", "v" }, "<leader>da", vim.lsp.buf.code_action, "Code action")
-    map("n", "<leader>de", vim.diagnostic.open_float, "Line diagnostics")
-    map("n", "<leader>[d", vim.diagnostic.goto_prev, "Prev diagnostic")
-    map("n", "<leader>]d", vim.diagnostic.goto_next, "Next diagnostic")
+    map("n", "<leader>de", vim.lsp.buf.rename, "Rename")
+    map({ "n", "v" }, "<leader>ds", vim.lsp.buf.code_action, "Code action")
+    map("n", "<leader>dx", vim.diagnostic.open_float, "Line diagnostics")
+    map("n", "<leader>dh", vim.diagnostic.goto_prev, "Prev diagnostic")
+    map("n", "<leader>dl", vim.diagnostic.goto_next, "Next diagnostic")
   end,
 })
 
@@ -150,7 +131,7 @@ M.gitsigns_on_attach = function(bufnr)
   end
 
   -- Navigation
-  map("n", "]c", function()
+  map("n", "<leader>hl", function()
     if vim.wo.diff then
       return "]c"
     end
@@ -158,7 +139,7 @@ M.gitsigns_on_attach = function(bufnr)
     return "<Ignore>"
   end, { expr = true, desc = "Next hunk" })
 
-  map("n", "[c", function()
+  map("n", "<leader>hh", function()
     if vim.wo.diff then
       return "[c"
     end
@@ -166,38 +147,38 @@ M.gitsigns_on_attach = function(bufnr)
     return "<Ignore>"
   end, { expr = true, desc = "Prev hunk" })
 
-  -- Actions: <leader>gh + lowercase
-  map("n", "<leader>ghs", gs.stage_hunk, { desc = "Stage hunk" })
-  map("n", "<leader>ghr", gs.reset_hunk, { desc = "Reset hunk" })
+  -- Actions: <leader>h + lowercase
+  map("n", "<leader>hs", gs.stage_hunk, { desc = "Stage hunk" })
+  map("n", "<leader>hr", gs.reset_hunk, { desc = "Reset hunk" })
 
-  map("v", "<leader>ghs", function()
+  map("v", "<leader>hs", function()
     gs.stage_hunk { vim.fn.line ".", vim.fn.line "v" }
   end, { desc = "Stage hunk" })
 
-  map("v", "<leader>ghr", function()
+  map("v", "<leader>hr", function()
     gs.reset_hunk { vim.fn.line ".", vim.fn.line "v" }
   end, { desc = "Reset hunk" })
 
-  map("n", "<leader>gha", gs.stage_buffer, { desc = "Stage buffer" }) -- a = all
-  map("n", "<leader>ghu", gs.undo_stage_hunk, { desc = "Undo stage hunk" })
-  map("n", "<leader>ghx", gs.reset_buffer, { desc = "Reset buffer" }) -- x = drop
-  map("n", "<leader>ghp", gs.preview_hunk, { desc = "Preview hunk" })
+  map("n", "<leader>ha", gs.stage_buffer, { desc = "Stage buffer" }) -- a = all
+  map("n", "<leader>hu", gs.undo_stage_hunk, { desc = "Undo stage hunk" })
+  map("n", "<leader>hr", gs.reset_buffer, { desc = "Reset buffer" }) -- x = drop
+  map("n", "<leader>hp", gs.preview_hunk, { desc = "Preview hunk" })
 
-  map("n", "<leader>ghb", function()
+  map("n", "<leader>hb", function()
     gs.blame_line { full = true }
   end, { desc = "Blame line" })
 
-  map("n", "<leader>ght", gs.toggle_current_line_blame, { desc = "Toggle line blame" })
+  map("n", "<leader>ht", gs.toggle_current_line_blame, { desc = "Toggle line blame" })
 
-  map("n", "<leader>ghd", gs.diffthis, { desc = "Diff this" })
-  map("n", "<leader>ghw", function()
+  map("n", "<leader>hd", gs.diffthis, { desc = "Diff this" })
+  map("n", "<leader>hw", function()
     gs.diffthis "~"
   end, { desc = "Diff against HEAD~" })
 
-  map("n", "<leader>ghz", gs.toggle_deleted, { desc = "Toggle deleted" })
+  map("n", "<leader>hz", gs.toggle_deleted, { desc = "Toggle deleted" })
 
   -- Text object
-  map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Select hunk" })
+  map({ "o", "x" }, "hi", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Select hunk" })
 end
 
 -- NvimTree

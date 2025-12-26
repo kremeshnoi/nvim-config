@@ -20,7 +20,7 @@ return {
 
       local on_attach = function(_, bufnr)
         if vim.lsp.inlay_hint then
-          pcall(vim.lsp.inlay_hint.enable, true, { bufnr = bufnr })
+          pcall(vim.lsp.inlay_hint.enable, false, { bufnr = bufnr })
         end
       end
 

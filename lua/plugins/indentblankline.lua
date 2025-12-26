@@ -5,11 +5,13 @@ return {
   event = { "BufReadPre", "BufNewFile" },
   opts = {
     indent = {
-      char = "│",
       highlight = "IblIndent",
     },
     scope = {
-      enabled = false,
+      enabled = true,
+      highlight = "IblScope",
+      show_start = false,
+      show_end = false,
     },
   },
   config = function(_, opts)
