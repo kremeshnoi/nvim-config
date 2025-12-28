@@ -1,38 +1,17 @@
 local keymap = vim.keymap
 
-local is_mac = vim.fn.has "macunix" == 1
-local is_win = vim.fn.has "win32" == 1 or vim.fn.has "win64" == 1
-
--- On macOS some terminals don't send <M-...> for Option, but raw termcodes.
--- Fill these once via: :lua print(vim.fn.keytrans(vim.fn.getcharstr())))
-local mod_key = {
-  h = "<80><fc>^Hh",
-  j = "<80><fc>^Hj",
-  k = "<80><fc>^Hk",
-  l = "<80><fc>^Hl",
-  n = "<80><fc>^Hn",
-}
-
-local function alt_or_cmd(lhs)
-  if is_mac and mod_key[lhs] then
-    return mod_key[lhs]
-  end
-
-  if is_mac then
-    return lhs
-  end
-
-  if is_win or not is_mac then
-    return "<A-" .. lhs .. ">"
-  end
-end
-
 local function telescope()
   return require "telescope.builtin"
 end
 
 local function refactoring()
   return require "refactoring"
+end
+
+local is_mac = vim.fn.has "macunix" == 1
+local mod_key = is_mac and "M" or "A"
+local function alt_or_option(lhs)
+  return "<" .. mod_key .. "-" .. lhs .. ">"
 end
 
 -- General
@@ -106,15 +85,16 @@ keymap.set("n", "<leader>f/", function()
 end, { desc = "Fuzzy in current buffer" })
 
 -- Tabs
-keymap.set("n", alt_or_cmd "h", "<Cmd>BufferPrevious<CR>", { desc = "Previous buffer" })
-keymap.set("n", alt_or_cmd "l", "<Cmd>BufferNext<CR>", { desc = "Next buffer" })
-keymap.set("n", alt_or_cmd "x", "<Cmd>BufferClose<CR>", { desc = "Close buffer" })
-keymap.set("n", alt_or_cmd "xa", "<Cmd>BufferCloseAllButCurrent<CR>", { desc = "Close all but current buffer" })
+keymap.set("n", alt_or_option "h", "<Cmd>BufferPrevious<CR>", { desc = "Previous buffer" })
+keymap.set("n", alt_or_option "l", "<Cmd>BufferNext<CR>", { desc = "Next buffer" })
+keymap.set("n", alt_or_option "x", "<Cmd>BufferClose<CR>", { desc = "Close buffer" })
+keymap.set("n", alt_or_option "xa", "<Cmd>BufferCloseAllButCurrent<CR>", { desc = "Close all but current buffer" })
 
 for i = 1, 9 do
-  keymap.set("n", alt_or_cmd(tostring(i)), "<Cmd>BufferGoto " .. i .. "<CR>", { desc = "Go to buffer " .. i })
+  keymap.set("n", alt_or_option(tostring(i)), "<Cmd>BufferGoto " .. i .. "<CR>", { desc = "Go to buffer " .. i })
 end
-keymap.set("n", alt_or_cmd "0", "<Cmd>BufferLast<CR>", { desc = "Go to last buffer" })
+
+keymap.set("n", alt_or_option "0", "<Cmd>BufferLast<CR>", { desc = "Go to last buffer" })
 
 -- Refactoring
 keymap.set("n", "<leader>rr", function()
@@ -250,12 +230,12 @@ keymap.set("i", "<C-j>", "<Down>", { desc = "Down (insert)" })
 keymap.set("i", "<C-k>", "<Up>", { desc = "Up (insert)" })
 
 -- VM: select next/skip + add cursor above/below
-keymap.set("n", alt_or_cmd "n", "<Plug>(VM-Find-Under)", { desc = "VM: Select next occurrence" })
-keymap.set("x", alt_or_cmd "n", "<Plug>(VM-Find-Subword-Under)", { desc = "VM: Select next occurrence" })
+keymap.set("n", alt_or_option "n", "<Plug>(VM-Find-Under)", { desc = "VM: Select next occurrence" })
+keymap.set("x", alt_or_option "n", "<Plug>(VM-Find-Subword-Under)", { desc = "VM: Select next occurrence" })
 
-keymap.set("n", alt_or_cmd "j", "<Plug>(VM-Add-Cursor-Down)", { desc = "VM: Add cursor below" })
-keymap.set("n", alt_or_cmd "k", "<Plug>(VM-Add-Cursor-Up)", { desc = "VM: Add cursor above" })
-keymap.set("x", alt_or_cmd "j", "<Plug>(VM-Add-Cursor-Down)", { desc = "VM: Add cursor below" })
-keymap.set("x", alt_or_cmd "k", "<Plug>(VM-Add-Cursor-Up)", { desc = "VM: Add cursor above" })
+keymap.set("n", alt_or_option "j", "<Plug>(VM-Add-Cursor-Down)", { desc = "VM: Add cursor below" })
+keymap.set("n", alt_or_option "k", "<Plug>(VM-Add-Cursor-Up)", { desc = "VM: Add cursor above" })
+keymap.set("x", alt_or_option "j", "<Plug>(VM-Add-Cursor-Down)", { desc = "VM: Add cursor below" })
+keymap.set("x", alt_or_option "k", "<Plug>(VM-Add-Cursor-Up)", { desc = "VM: Add cursor above" })
 
 return M
