@@ -1,10 +1,30 @@
 local keymap = vim.keymap
 
 local is_mac = vim.fn.has "macunix" == 1
-local mod_key = is_mac and "<80><fc>^H" or "A"
+local is_win = vim.fn.has "win32" == 1 or vim.fn.has "win64" == 1
+
+-- On macOS some terminals don't send <M-...> for Option, but raw termcodes.
+-- Fill these once via: :lua print(vim.fn.keytrans(vim.fn.getcharstr())))
+local mod_key = {
+  h = "<80><fc>^Hh",
+  j = "<80><fc>^Hj",
+  k = "<80><fc>^Hk",
+  l = "<80><fc>^Hl",
+  n = "<80><fc>^Hn",
+}
 
 local function alt_or_cmd(lhs)
-  return "<" .. mod_key .. "-" .. lhs .. ">"
+  if is_mac and mod_key[lhs] then
+    return mod_key[lhs]
+  end
+
+  if is_mac then
+    return "<M-" .. lhs .. ">"
+  end
+
+  if is_win or not is_mac then
+    return "<A-" .. lhs .. ">"
+  end
 end
 
 local function telescope()
