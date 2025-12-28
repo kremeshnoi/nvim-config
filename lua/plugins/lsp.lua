@@ -18,7 +18,12 @@ return {
         update_in_insert = false,
       }
 
-      local on_attach = function(_, bufnr)
+      local ok_navic, navic = pcall(require, "nvim-navic")
+
+      local on_attach = function(client, bufnr)
+        if ok_navic and client.server_capabilities.documentSymbolProvider then
+          navic.attach(client, bufnr)
+        end
         if vim.lsp.inlay_hint then
           pcall(vim.lsp.inlay_hint.enable, false, { bufnr = bufnr })
         end
@@ -35,14 +40,22 @@ return {
         eslint = {},
         html = {},
         cssls = {},
+        volar = {
+          filetypes = { "vue" },
+        },
         tailwindcss = {},
         jsonls = {},
         yamlls = {},
+        intelephense = {},
+        solargraph = {},
         rust_analyzer = {
           settings = {
             ["rust-analyzer"] = {
               cargo = { allFeatures = true },
-              checkOnSave = { command = "clippy" },
+              checkOnSave = true,
+              check = {
+                command = "check",
+              },
             },
           },
         },
@@ -81,8 +94,22 @@ return {
         end
       end
 
-      require("mason-lspconfig").setup {
-        ensure_installed = vim.tbl_keys(servers),
+      local mason_lspconfig = require "mason-lspconfig"
+      local available = {}
+      for _, name in ipairs(mason_lspconfig.get_available_servers()) do
+        available[name] = true
+      end
+
+      local ensure = {}
+      for name in pairs(servers) do
+        if available[name] then
+          table.insert(ensure, name)
+        end
+      end
+      table.sort(ensure)
+
+      mason_lspconfig.setup {
+        ensure_installed = ensure,
         automatic_enable = true,
       }
     end,

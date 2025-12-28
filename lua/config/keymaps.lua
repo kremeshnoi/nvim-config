@@ -1,7 +1,18 @@
 local keymap = vim.keymap
 
+local is_mac = vim.fn.has "macunix" == 1
+local mod_key = is_mac and "D" or "A"
+
+local function alt_or_cmd(lhs)
+  return "<" .. mod_key .. "-" .. lhs .. ">"
+end
+
 local function telescope()
   return require "telescope.builtin"
+end
+
+local function refactoring()
+  return require "refactoring"
 end
 
 -- General
@@ -75,20 +86,48 @@ keymap.set("n", "<leader>f/", function()
 end, { desc = "Fuzzy in current buffer" })
 
 -- Tabs
-keymap.set("n", "<A-h>", "<Cmd>BufferPrevious<CR>", { desc = "Previous buffer" })
-keymap.set("n", "<A-l>", "<Cmd>BufferNext<CR>", { desc = "Next buffer" })
-keymap.set("n", "<A-x>", "<Cmd>BufferClose<CR>", { desc = "Close buffer" })
-keymap.set("n", "<A-xa>", "<Cmd>BufferCloseAllButCurrent<CR>", { desc = "Close all but current buffer" })
+keymap.set("n", alt_or_cmd "h", "<Cmd>BufferPrevious<CR>", { desc = "Previous buffer" })
+keymap.set("n", alt_or_cmd "l", "<Cmd>BufferNext<CR>", { desc = "Next buffer" })
+keymap.set("n", alt_or_cmd "x", "<Cmd>BufferClose<CR>", { desc = "Close buffer" })
+keymap.set("n", alt_or_cmd "xa", "<Cmd>BufferCloseAllButCurrent<CR>", { desc = "Close all but current buffer" })
 
 for i = 1, 9 do
-  keymap.set("n", "<A-" .. i .. ">", "<Cmd>BufferGoto " .. i .. "<CR>", { desc = "Go to buffer " .. i })
+  keymap.set("n", alt_or_cmd(tostring(i)), "<Cmd>BufferGoto " .. i .. "<CR>", { desc = "Go to buffer " .. i })
 end
-keymap.set("n", "<A-0>", "<Cmd>BufferLast<CR>", { desc = "Go to last buffer" })
+keymap.set("n", alt_or_cmd "0", "<Cmd>BufferLast<CR>", { desc = "Go to last buffer" })
 
 -- Refactoring
 keymap.set("n", "<leader>rr", function()
-  require("refactoring").select_refactor()
+  refactoring().select_refactor()
 end, { desc = "Refactor" })
+
+keymap.set({ "n", "x" }, "<leader>re", function()
+  refactoring().refactor "Extract Function"
+end, { desc = "Extract function" })
+
+keymap.set({ "n", "x" }, "<leader>rw", function()
+  refactoring().refactor "Extract Function To File"
+end, { desc = "Extract function to file" })
+
+keymap.set({ "n", "x" }, "<leader>ri", function()
+  refactoring().refactor "Extract Variable"
+end, { desc = "Extract variable" })
+
+keymap.set({ "n", "x" }, "<leader>ro", function()
+  refactoring().refactor "Inline Variable"
+end, { desc = "Inline variable" })
+
+keymap.set({ "n", "x" }, "<leader>ru", function()
+  refactoring().refactor "Inline Function"
+end, { desc = "Inline function" })
+
+keymap.set({ "n", "x" }, "<leader>rj", function()
+  refactoring().refactor "Extract Block"
+end, { desc = "Extract block" })
+
+keymap.set({ "n", "x" }, "<leader>rk", function()
+  refactoring().refactor "Extract Block To File"
+end, { desc = "Extract block to file" })
 
 -- LSP
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -191,12 +230,12 @@ keymap.set("i", "<C-j>", "<Down>", { desc = "Down (insert)" })
 keymap.set("i", "<C-k>", "<Up>", { desc = "Up (insert)" })
 
 -- VM: select next/skip + add cursor above/below
-keymap.set("n", "<A-n>", "<Plug>(VM-Find-Under)", { desc = "VM: Select next occurrence" })
-keymap.set("x", "<A-n>", "<Plug>(VM-Find-Subword-Under)", { desc = "VM: Select next occurrence" })
+keymap.set("n", alt_or_cmd "n", "<Plug>(VM-Find-Under)", { desc = "VM: Select next occurrence" })
+keymap.set("x", alt_or_cmd "n", "<Plug>(VM-Find-Subword-Under)", { desc = "VM: Select next occurrence" })
 
-keymap.set("n", "<A-j>", "<Plug>(VM-Add-Cursor-Down)", { desc = "VM: Add cursor below" })
-keymap.set("n", "<A-k>", "<Plug>(VM-Add-Cursor-Up)", { desc = "VM: Add cursor above" })
-keymap.set("x", "<A-j>", "<Plug>(VM-Add-Cursor-Down)", { desc = "VM: Add cursor below" })
-keymap.set("x", "<A-k>", "<Plug>(VM-Add-Cursor-Up)", { desc = "VM: Add cursor above" })
+keymap.set("n", alt_or_cmd "j", "<Plug>(VM-Add-Cursor-Down)", { desc = "VM: Add cursor below" })
+keymap.set("n", alt_or_cmd "k", "<Plug>(VM-Add-Cursor-Up)", { desc = "VM: Add cursor above" })
+keymap.set("x", alt_or_cmd "j", "<Plug>(VM-Add-Cursor-Down)", { desc = "VM: Add cursor below" })
+keymap.set("x", alt_or_cmd "k", "<Plug>(VM-Add-Cursor-Up)", { desc = "VM: Add cursor above" })
 
 return M

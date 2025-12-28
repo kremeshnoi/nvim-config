@@ -1,7 +1,7 @@
 return {
-  { "nvim-pack/nvim-spectre", cmd = "Spectre", lazy = false },
   {
     "ThePrimeagen/refactoring.nvim",
+    lazy = false,
     dependencies = { "nvim-lua/plenary.nvim", "nvim-treesitter/nvim-treesitter" },
   },
 }

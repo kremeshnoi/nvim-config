@@ -4,7 +4,7 @@ return {
   priority = 1000,
   opts = {
     style = "dark",
-    transparent = true,
+    transparent = false,
     italic_comments = true,
     disable_nvimtree_bg = true,
     color_overrides = {},

@@ -13,12 +13,15 @@ return {
         typescript = { "prettierd", "prettier" },
         javascriptreact = { "prettierd", "prettier" },
         typescriptreact = { "prettierd", "prettier" },
+        vue = { "prettierd", "prettier" },
 
         json = { "prettierd", "prettier" },
         yaml = { "prettierd", "prettier" },
         markdown = { "prettierd", "prettier" },
         css = { "prettierd", "prettier" },
         html = { "prettierd", "prettier" },
+        php = { "php_cs_fixer" },
+        ruby = { "rubocop" },
 
         toml = { "taplo" },
         bash = { "shfmt" },
@@ -39,6 +42,9 @@ return {
         "shfmt",
         "sqlfmt",
         "sqlfluff",
+        "php-cs-fixer",
+        "rubocop",
+        "vue-language-server",
       },
     },
     config = function(_, opts)

@@ -23,6 +23,7 @@ return {
         "javascript",
         "typescript",
         "tsx",
+        "vue",
 
         "json",
         "yaml",
@@ -33,6 +34,9 @@ return {
         "markdown_inline",
 
         "rust",
+        "php",
+        "phpdoc",
+        "ruby",
       },
     },
     config = function(_, opts)
