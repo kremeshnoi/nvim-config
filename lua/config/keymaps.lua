@@ -1,7 +1,7 @@
 local keymap = vim.keymap
 
 local is_mac = vim.fn.has "macunix" == 1
-local mod_key = is_mac and "D" or "A"
+local mod_key = is_mac and "<80><fc>^H" or "A"
 
 local function alt_or_cmd(lhs)
   return "<" .. mod_key .. "-" .. lhs .. ">"
