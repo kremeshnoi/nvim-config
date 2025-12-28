@@ -19,7 +19,7 @@ local function alt_or_cmd(lhs)
   end
 
   if is_mac then
-    return "<M-" .. lhs .. ">"
+    return lhs
   end
 
   if is_win or not is_mac then
