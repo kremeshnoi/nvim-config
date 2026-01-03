@@ -7,8 +7,12 @@ return {
     transparent = false,
     italic_comments = true,
     disable_nvimtree_bg = true,
+
     color_overrides = {},
-    group_overrides = {},
+
+    group_overrides = {
+      ["@lsp.type.component.vue"] = { link = "@lsp.type.class" },
+    },
   },
   config = function(_, opts)
     local vscode = require "vscode"
