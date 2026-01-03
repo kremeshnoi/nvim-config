@@ -16,3 +16,4 @@ opt.foldmethod = "manual"
 opt.foldlevel = 99
 opt.foldlevelstart = 99
 opt.fillchars:append { eob = " " }
+vim.opt.splitright = true
