@@ -13,12 +13,9 @@ return {
         capabilities = cmp_lsp.default_capabilities(capabilities)
       end
 
-      local on_attach = function(_, _) end
-
-      local on_attach_noformat = function(client, bufnr)
+      local on_attach = function(client, bufnr)
         client.server_capabilities.documentFormattingProvider = false
         client.server_capabilities.documentRangeFormattingProvider = false
-        on_attach(client, bufnr)
       end
 
       vim.diagnostic.config {
@@ -33,13 +30,11 @@ return {
         ensure_installed = {
           "vue_ls",
           "vtsls",
-          "ts_ls",
           "eslint",
           "html",
           "cssls",
           "tailwindcss",
           "jsonls",
-          "emmet_ls",
           "yamlls",
           "dockerls",
           "bashls",
@@ -53,8 +48,8 @@ return {
         automatic_enable = false,
       }
 
-      local vue_language_server_path = vim.fn.expand "$MASON/packages"
-        .. "/vue-language-server/node_modules/@vue/language-server"
+      local mason_root = vim.env.MASON or (vim.fn.stdpath "data" .. "/mason")
+      local vue_language_server_path = mason_root .. "/packages/vue-language-server/node_modules/@vue/language-server"
 
       local vue_plugin = {
         name = "@vue/typescript-plugin",
@@ -63,40 +58,16 @@ return {
         configNamespace = "typescript",
       }
 
-      local function vue_ts_forwarder(client)
-        client.handlers["tsserver/request"] = function(_, result, context)
-          local clients = vim.lsp.get_clients { bufnr = context.bufnr, name = "vtsls" }
-          if #clients == 0 then
-            return
-          end
-          local ts_client = clients[1]
-          local param = result[1]
-          local id = param[1]
-          local command = param[2]
-          local payload = param[3]
-          ts_client:exec_cmd({
-            title = "vue_request_forward",
-            command = "typescript.tsserverRequest",
-            arguments = { command, payload },
-          }, { bufnr = context.bufnr }, function(_, r)
-            local response = r and r.body
-            client:notify("tsserver/response", { { id, response } })
-          end)
-        end
-      end
-
       local servers = {
         vue_ls = {
           capabilities = capabilities,
           on_attach = on_attach,
           filetypes = { "vue" },
-          init_options = { vue = { hybridMode = true } },
-          on_init = vue_ts_forwarder,
         },
 
         vtsls = {
           capabilities = capabilities,
-          on_attach = on_attach_noformat,
+          on_attach = on_attach,
           settings = {
             vtsls = {
               tsserver = {
@@ -107,34 +78,22 @@ return {
           filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
         },
 
-        ts_ls = {
-          capabilities = capabilities,
-          on_attach = on_attach_noformat,
-          filetypes = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
-        },
-
         eslint = {
           capabilities = capabilities,
-          on_attach = on_attach_noformat,
+          on_attach = on_attach,
           filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "vue" },
         },
 
-        html = { capabilities = capabilities, on_attach = on_attach },
-        cssls = { capabilities = capabilities, on_attach = on_attach },
-
-        emmet_ls = {
+        html = {
           capabilities = capabilities,
           on_attach = on_attach,
-          filetypes = {
-            "html",
-            "css",
-            "scss",
-            "sass",
-            "less",
-            "javascriptreact",
-            "typescriptreact",
-            "vue",
-          },
+          filetypes = { "html", "vue", "typescriptreact", "typescript", "javascriptreact", "javascript" },
+        },
+
+        cssls = {
+          capabilities = capabilities,
+          on_attach = on_attach,
+          filetypes = { "css", "scss", "less" },
         },
 
         tailwindcss = {
@@ -157,23 +116,45 @@ return {
         jsonls = {
           capabilities = capabilities,
           on_attach = on_attach,
+          filetypes = { "json", "jsonc" },
           settings = { json = { validate = { enable = true } } },
         },
 
         yamlls = {
           capabilities = capabilities,
           on_attach = on_attach,
+          filetypes = { "yaml" },
           settings = { yaml = { validate = true, keyOrdering = false } },
         },
 
-        dockerls = { capabilities = capabilities, on_attach = on_attach },
-        bashls = { capabilities = capabilities, on_attach = on_attach },
-        taplo = { capabilities = capabilities, on_attach = on_attach },
-        marksman = { capabilities = capabilities, on_attach = on_attach },
+        dockerls = {
+          capabilities = capabilities,
+          on_attach = on_attach,
+          filetypes = { "dockerfile" },
+        },
+
+        bashls = {
+          capabilities = capabilities,
+          on_attach = on_attach,
+          filetypes = { "sh" },
+        },
+
+        taplo = {
+          capabilities = capabilities,
+          on_attach = on_attach,
+          filetypes = { "toml" },
+        },
+
+        marksman = {
+          capabilities = capabilities,
+          on_attach = on_attach,
+          filetypes = { "markdown" },
+        },
 
         lua_ls = {
           capabilities = capabilities,
           on_attach = on_attach,
+          filetypes = { "lua" },
           settings = {
             Lua = {
               runtime = { version = "LuaJIT" },
@@ -190,6 +171,7 @@ return {
         rust_analyzer = {
           capabilities = capabilities,
           on_attach = on_attach,
+          filetypes = { "rust" },
           settings = {
             ["rust-analyzer"] = {
               cargo = { allFeatures = true },
@@ -205,6 +187,7 @@ return {
         intelephense = {
           capabilities = capabilities,
           on_attach = on_attach,
+          filetypes = { "php" },
           settings = {
             intelephense = {
               files = { maxSize = 2000000 },
@@ -215,7 +198,8 @@ return {
 
         ruby_lsp = {
           capabilities = capabilities,
-          on_attach = on_attach_noformat,
+          on_attach = on_attach,
+          filetypes = { "ruby" },
         },
       }
 
