@@ -4,46 +4,116 @@ A comprehensive, portable Neovim configuration designed for efficient developmen
 
 <img width="3839" height="2085" alt="image" src="https://github.com/user-attachments/assets/497e8b49-081e-4993-be9e-31f3b7684793" />
 
-## Overview
+## Dependencies
 
-This repository contains a carefully crafted Neovim configuration that provides a consistent, feature-rich development environment. The configuration emphasizes productivity, maintainability, and ease of deployment across different systems.
+### Core
 
-## Requirements
+- **Neovim (0.11.4)**: https://github.com/neovim/neovim/wiki/Installing-Neovim
+- **Git** (Lazy.nvim bootstrap + git plugins): https://git-scm.com/downloads
+- **Nerd Font** (icons via `nvim-web-devicons`): https://www.nerdfonts.com/
 
-### Dependencies
+### Mason
 
-- **Neovim**: Version 0.10.0 or higher ([Installation Guide](https://github.com/neovim/neovim/releases/tag/v0.10.0))
-- **Nerd Font**: Required for proper icon rendering ([Download](https://www.nerdfonts.com/))
-- **Python Virtual Environment**: python3.10-venv package
-- **Ripgrep**: Enhanced grep searching functionality with Telescope ([Installation](https://github.com/BurntSushi/ripgrep))
+#### Utilities
 
-## Installation
+- **curl**: https://curl.se/docs/install.html
+- **wget** (optional alternative): https://www.gnu.org/software/wget/
+- **unzip**: https://infozip.sourceforge.net/UnZip.html
+- **tar**: https://www.gnu.org/software/tar/
+- **gzip**: https://www.gnu.org/software/gzip/
 
-### Quick Start
+#### Languages
 
-Clone this repository directly into your Neovim configuration directory:
+- luarocks: /usr/local/bin/luarocks 3.12.2
+- cargo: cargo 1.88.0 (873a06493 2025-05-10)
+- PHP: PHP 8.4.16 (cli) (built: Dec 18 2025 23:38:28) (NTS)
+- Go: go version go1.25.5 linux/amd64
+- node: v24.8.0
+- Composer: Composer version 2.9.3 2025-12-30 13:40:17
+- Ruby: ruby 3.4.7 (2025-10-08 revision 7a5688e2a2) +PRISM x86_64-linux
+- julia: julia version 1.10.0
+- python: Python 3.10.12
+- java: openjdk version "17.0.17" 2025-10-21
+- npm: 11.6.0
+- RubyGem: 3.6.9
+- javac: javac 17.0.17
+- pip: pip 22.0.2 from /usr/lib/python3/dist-packages/pip (python 3.10)
+- python venv: O
 
-```bash
-git clone https://github.com/kremeshnoi/nvim-config ~/.config/nvim
+### Telescope
+
+- **ripgrep (`rg`)**: https://github.com/BurntSushi/ripgrep#installation
+- **fd (`fd`)**: https://github.com/sharkdp/fd#installation
+
+### Treesitter
+
+#### Build prerequisites
+
+To build Treesitter parsers locally:
+
+- **C compiler** (gcc or clang): https://gcc.gnu.org/ or https://clang.llvm.org/
+- **make**: https://www.gnu.org/software/make/
+
+For an ideal Treesitter health report:
+
+- **tree-sitter CLI**: https://github.com/tree-sitter/tree-sitter/tree/master/crates/cli
+
+#### Languages
+
+```txt
+                        H L F I J
+- bash                  ✓ ✓ ✓ ✓ ✓
+- clojure               ✓ ✓ ✓ . ✓
+- comment               ✓ . . . .
+- css                   ✓ . ✓ ✓ ✓
+- csv                   ✓ . . . .
+- dockerfile            ✓ . . . ✓
+- dot                   ✓ . ✓ ✓ ✓
+- ecma
+- gitattributes         ✓ ✓ . . ✓
+- gitcommit             ✓ . . . ✓
+- gitignore             ✓ . . . ✓
+- hcl                   ✓ . ✓ ✓ ✓
+- html                  ✓ ✓ ✓ ✓ ✓
+- html_tags
+- http                  ✓ . ✓ . ✓
+- javascript            ✓ ✓ ✓ ✓ ✓
+- jsdoc                 ✓ . . . .
+- json                  ✓ ✓ ✓ ✓ ✓
+- jsx
+- lua                   ✓ ✓ ✓ ✓ ✓
+- luadoc                ✓ . . . .
+- make                  ✓ . ✓ . ✓
+- markdown              ✓ . ✓ ✓ ✓
+- markdown_inline       ✓ . . . ✓
+- mermaid               ✓ . ✓ ✓ ✓
+- nginx                 ✓ . ✓ . ✓
+- php                   ✓ ✓ ✓ ✓ ✓
+- php_only              ✓ ✓ ✓ ✓ ✓
+- phpdoc                ✓ . . . .
+- regex                 ✓ . . . .
+- ruby                  ✓ ✓ ✓ ✓ ✓
+- rust                  ✓ ✓ ✓ ✓ ✓
+- scheme                ✓ . ✓ . ✓
+- scss                  ✓ . ✓ ✓ ✓
+- sql                   ✓ . ✓ ✓ ✓
+- toml                  ✓ ✓ ✓ ✓ ✓
+- tsv                   ✓ . . . .
+- tsx                   ✓ ✓ ✓ ✓ ✓
+- typescript            ✓ ✓ ✓ ✓ ✓
+- vim                   ✓ ✓ ✓ . ✓
+- vimdoc                ✓ . . . ✓
+- vue                   ✓ . ✓ ✓ ✓
+- yaml                  ✓ ✓ ✓ ✓ ✓
 ```
 
-## Uninstallation
+## Structure
 
-To completely remove this configuration and all associated data:
-
-```bash
-rm -rf ~/.local/share/nvim
-rm -rf ~/.local/state/nvim
-rm -rf ~/.cache/nvim
-rm -rf ~/.config/nvim
-```
-
-## Directory Structure
 ```
 ~/.config/nvim/
-├── init.lua             # Main configuration entry point
+├── init.lua
 ├── lua/
-│   ├── config/          # Core configuration files
-│   └── plugins/         # Plugin configurations
-└── README.md            # This file
+│   ├── config/          # options/keymaps/autocmds + Lazy.nvim bootstrap
+│   └── plugins/         # plugin specs and configuration (Lazy.nvim)
+└── README.md
 ```
