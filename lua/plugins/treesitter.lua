@@ -2,107 +2,67 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     branch = "main",
-    version = false,
     lazy = false,
     build = ":TSUpdate",
-    event = { "BufReadPre", "BufNewFile" },
-    opts = {
-      indent = { enable = true },
-      highlight = { enable = true },
-      ensure_installed = {
-        "vim",
-        "lua",
-        "bash",
-        "dockerfile",
-        "regex",
-        "comment",
-        "gitignore",
 
-        "html",
+    config = function()
+      local parsers = {
+        "hcl",
+        "vim",
+        "sql",
+        "vue",
+        "tsx",
         "css",
+        "scss",
+        "html",
+        "http",
+        "bash",
+        "nginx",
+        "regex",
+        "mermaid",
+
+        "lua",
+        "php",
+        "ruby",
+        "rust",
+        "clojure",
         "javascript",
         "typescript",
-        "tsx",
-        "vue",
 
-        "json",
+        "dot",
+        "csv",
+        "make",
         "yaml",
         "toml",
-        "sql",
-
+        "json",
+        "scheme",
         "markdown",
-        "markdown_inline",
+        "gitignore",
+        "gitcommit",
+        "dockerfile",
+        "gitattributes",
 
-        "rust",
-        "php",
+        "jsdoc",
+        "luadoc",
+        "vimdoc",
         "phpdoc",
-        "ruby",
-      },
-    },
-    config = function(_, opts)
-      require("nvim-treesitter.config").setup(opts)
+        "comment",
+      }
 
-      vim.opt.foldmethod = "expr"
-      vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+      local ts = require "nvim-treesitter"
+      ts.install(parsers)
+
+      vim.g.vim_regex_highlighting = false
+
       vim.opt.foldenable = false
-    end,
-  },
 
-  {
-    "nvim-treesitter/nvim-treesitter-textobjects",
-    branch = "main",
-    event = "VeryLazy",
-    opts = {
-      select = {
-        enable = true,
-        lookahead = true,
-        keymaps = {
-          ["af"] = "@function.outer",
-          ["if"] = "@function.inner",
-          ["ac"] = "@class.outer",
-          ["ic"] = "@class.inner",
-          ["aa"] = "@parameter.outer",
-          ["ia"] = "@parameter.inner",
-          ["ab"] = "@block.outer",
-          ["ib"] = "@block.inner",
-          ["ai"] = "@conditional.outer",
-          ["ii"] = "@conditional.inner",
-          ["al"] = "@loop.outer",
-          ["il"] = "@loop.inner",
-        },
-      },
-      move = {
-        enable = true,
-        set_jumps = true,
-        goto_next_start = {
-          ["]f"] = "@function.outer",
-          ["]c"] = "@class.outer",
-          ["]a"] = "@parameter.inner",
-        },
-        goto_next_end = {
-          ["]F"] = "@function.outer",
-          ["]C"] = "@class.outer",
-          ["]A"] = "@parameter.inner",
-        },
-        goto_previous_start = {
-          ["[f"] = "@function.outer",
-          ["[c"] = "@class.outer",
-          ["[a"] = "@parameter.inner",
-        },
-        goto_previous_end = {
-          ["[F"] = "@function.outer",
-          ["[C"] = "@class.outer",
-          ["[A"] = "@parameter.inner",
-        },
-      },
-      swap = {
-        enable = true,
-        swap_next = { ["<leader>sn"] = "@parameter.inner" },
-        swap_previous = { ["<leader>sp"] = "@parameter.inner" },
-      },
-    },
-    config = function(_, opts)
-      require("nvim-treesitter-textobjects").setup(opts)
+      local group = vim.api.nvim_create_augroup("TreesitterHighlight", { clear = true })
+      vim.api.nvim_create_autocmd("FileType", {
+        group = group,
+        callback = function(args)
+          pcall(vim.treesitter.start, args.buf)
+        end,
+      })
     end,
   },
 }
