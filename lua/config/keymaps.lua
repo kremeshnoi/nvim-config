@@ -8,6 +8,13 @@ local function refactoring()
   return require "refactoring"
 end
 
+local function fugitive(cmd)
+  return function()
+    require("lazy").load { plugins = { "vim-fugitive" } }
+    vim.cmd(cmd)
+  end
+end
+
 local is_mac = vim.fn.has "macunix" == 1
 local mod_key = is_mac and "M" or "A"
 local function alt_or_option(lhs)
@@ -17,11 +24,14 @@ end
 -- General
 keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Clear search highlight" })
 
--- Window focus
+-- Window
 keymap.set("n", "<C-h>", "<C-w>h", { desc = "Focus left window" })
 keymap.set("n", "<C-l>", "<C-w>l", { desc = "Focus right window" })
 keymap.set("n", "<C-j>", "<C-w>j", { desc = "Focus down window" })
 keymap.set("n", "<C-k>", "<C-w>k", { desc = "Focus up window" })
+keymap.set("n", "<leader>wl", "<cmd> vnew<cr>", { desc = "New empty buffer right" })
+keymap.set("n", "<leader>wj", "<cmd>below new<cr>", { desc = "New empty buffer below" })
+keymap.set("n", "<leader>wk", "<cmd>above new<cr>", { desc = "New empty buffer above" })
 
 -- Telescope
 -- LSP
@@ -55,6 +65,11 @@ keymap.set("n", "<leader>fk", function()
 end, { desc = "Keymaps" })
 
 -- Git
+keymap.set("n", "<leader>gg", fugitive "Git", { desc = "Git status (fugitive)" })
+keymap.set("n", "<leader>gc", fugitive "Git commit", { desc = "Git commit (fugitive)" })
+keymap.set("n", "<leader>gp", fugitive "Git push", { desc = "Git push (fugitive)" })
+keymap.set("n", "<leader>gt", fugitive "Git pull", { desc = "Git pull (fugitive)" })
+
 keymap.set("n", "<leader>fc", function()
   telescope().git_commits()
 end, { desc = "Git Commits" })
@@ -70,6 +85,66 @@ end, { desc = "Git Branches" })
 keymap.set("n", "<leader>fs", function()
   telescope().git_status()
 end, { desc = "Git Status" })
+
+local M = {}
+
+M.gitsigns_on_attach = function(bufnr)
+  local gs = package.loaded.gitsigns
+  local gitsigns_keymap = vim.keymap
+
+  local function map(mode, l, r, opts)
+    opts = opts or {}
+    opts.buffer = bufnr
+    gitsigns_keymap.set(mode, l, r, opts)
+  end
+
+  map("n", "<leader>hl", function()
+    if vim.wo.diff then
+      return "]c"
+    end
+    vim.schedule(gs.next_hunk)
+    return "<Ignore>"
+  end, { expr = true, desc = "Next hunk" })
+
+  map("n", "<leader>hh", function()
+    if vim.wo.diff then
+      return "[c"
+    end
+    vim.schedule(gs.prev_hunk)
+    return "<Ignore>"
+  end, { expr = true, desc = "Prev hunk" })
+
+  map("n", "<leader>hs", gs.stage_hunk, { desc = "Stage hunk" })
+  map("n", "<leader>hr", gs.reset_hunk, { desc = "Reset hunk" })
+
+  map("v", "<leader>hs", function()
+    gs.stage_hunk { vim.fn.line ".", vim.fn.line "v" }
+  end, { desc = "Stage hunk" })
+
+  map("v", "<leader>hr", function()
+    gs.reset_hunk { vim.fn.line ".", vim.fn.line "v" }
+  end, { desc = "Reset hunk" })
+
+  map("n", "<leader>ha", gs.stage_buffer, { desc = "Stage buffer" }) -- a = all
+  map("n", "<leader>hu", gs.undo_stage_hunk, { desc = "Undo stage hunk" })
+  map("n", "<leader>hr", gs.reset_buffer, { desc = "Reset buffer" }) -- x = drop
+  map("n", "<leader>hp", gs.preview_hunk, { desc = "Preview hunk" })
+
+  map("n", "<leader>hb", function()
+    gs.blame_line { full = true }
+  end, { desc = "Blame line" })
+
+  map("n", "<leader>ht", gs.toggle_current_line_blame, { desc = "Toggle line blame" })
+
+  map("n", "<leader>hd", gs.diffthis, { desc = "Diff this" })
+  map("n", "<leader>hw", function()
+    gs.diffthis "~"
+  end, { desc = "Diff against HEAD~" })
+
+  map("n", "<leader>hz", gs.toggle_deleted, { desc = "Toggle deleted" })
+
+  map({ "o", "x" }, "hi", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Select hunk" })
+end
 
 -- File Pickers
 keymap.set("n", "<leader>fo", function()
@@ -156,69 +231,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
     map("n", "<leader>dl", vim.diagnostic.goto_next, "Next diagnostic")
   end,
 })
-
-local M = {}
-
-M.gitsigns_on_attach = function(bufnr)
-  local gs = package.loaded.gitsigns
-  local keymap = vim.keymap
-
-  local function map(mode, l, r, opts)
-    opts = opts or {}
-    opts.buffer = bufnr
-    keymap.set(mode, l, r, opts)
-  end
-
-  -- Navigation
-  map("n", "<leader>hl", function()
-    if vim.wo.diff then
-      return "]c"
-    end
-    vim.schedule(gs.next_hunk)
-    return "<Ignore>"
-  end, { expr = true, desc = "Next hunk" })
-
-  map("n", "<leader>hh", function()
-    if vim.wo.diff then
-      return "[c"
-    end
-    vim.schedule(gs.prev_hunk)
-    return "<Ignore>"
-  end, { expr = true, desc = "Prev hunk" })
-
-  -- Actions: <leader>h + lowercase
-  map("n", "<leader>hs", gs.stage_hunk, { desc = "Stage hunk" })
-  map("n", "<leader>hr", gs.reset_hunk, { desc = "Reset hunk" })
-
-  map("v", "<leader>hs", function()
-    gs.stage_hunk { vim.fn.line ".", vim.fn.line "v" }
-  end, { desc = "Stage hunk" })
-
-  map("v", "<leader>hr", function()
-    gs.reset_hunk { vim.fn.line ".", vim.fn.line "v" }
-  end, { desc = "Reset hunk" })
-
-  map("n", "<leader>ha", gs.stage_buffer, { desc = "Stage buffer" }) -- a = all
-  map("n", "<leader>hu", gs.undo_stage_hunk, { desc = "Undo stage hunk" })
-  map("n", "<leader>hr", gs.reset_buffer, { desc = "Reset buffer" }) -- x = drop
-  map("n", "<leader>hp", gs.preview_hunk, { desc = "Preview hunk" })
-
-  map("n", "<leader>hb", function()
-    gs.blame_line { full = true }
-  end, { desc = "Blame line" })
-
-  map("n", "<leader>ht", gs.toggle_current_line_blame, { desc = "Toggle line blame" })
-
-  map("n", "<leader>hd", gs.diffthis, { desc = "Diff this" })
-  map("n", "<leader>hw", function()
-    gs.diffthis "~"
-  end, { desc = "Diff against HEAD~" })
-
-  map("n", "<leader>hz", gs.toggle_deleted, { desc = "Toggle deleted" })
-
-  -- Text object
-  map({ "o", "x" }, "hi", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Select hunk" })
-end
 
 -- NvimTree
 keymap.set("n", "<leader>ep", ":NvimTreeToggle<CR>", { desc = "Toggle Nvim-tree" })
