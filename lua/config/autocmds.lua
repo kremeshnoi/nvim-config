@@ -1,4 +1,3 @@
--- Force black background
 local function force_black_background()
   local vm_sources = {
     VM_Mono = "IncSearch",
@@ -52,7 +51,9 @@ end
 local grp = vim.api.nvim_create_augroup("ForceBlackBackground", { clear = true })
 
 local function apply()
-  vim.schedule(force_black_background)
+  vim.schedule(function()
+    force_black_background()
+  end)
 end
 
 vim.api.nvim_create_autocmd({ "VimEnter", "UIEnter", "ColorScheme" }, {
