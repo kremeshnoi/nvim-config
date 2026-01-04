@@ -2,7 +2,7 @@
 
 A comprehensive, portable Neovim configuration designed for efficient development across multiple environments.
 
-<img width="3839" height="2085" alt="image" src="https://github.com/user-attachments/assets/497e8b49-081e-4993-be9e-31f3b7684793" />
+<img width="3839" height="2081" alt="image" src="https://github.com/user-attachments/assets/3a606037-de45-47bb-8b02-3d60218d5f51" />
 
 ## Dependencies
 
@@ -11,6 +11,8 @@ A comprehensive, portable Neovim configuration designed for efficient developmen
 - **Neovim (0.11.4)**: https://github.com/neovim/neovim/wiki/Installing-Neovim
 - **Git** (Lazy.nvim bootstrap + git plugins): https://git-scm.com/downloads
 - **Nerd Font** (icons via `nvim-web-devicons`): https://www.nerdfonts.com/
+
+---
 
 ### Mason
 
@@ -40,10 +42,14 @@ A comprehensive, portable Neovim configuration designed for efficient developmen
 - pip: pip 22.0.2 from /usr/lib/python3/dist-packages/pip (python 3.10)
 - python venv: O
 
+---
+
 ### Telescope
 
 - **ripgrep (`rg`)**: https://github.com/BurntSushi/ripgrep#installation
 - **fd (`fd`)**: https://github.com/sharkdp/fd#installation
+
+---
 
 ### Treesitter
 
@@ -61,7 +67,7 @@ For an ideal Treesitter health report:
 #### Languages
 
 ```txt
-                        H L F I J
+                        H L F I J 
 - bash                  ✓ ✓ ✓ ✓ ✓
 - clojure               ✓ ✓ ✓ . ✓
 - comment               ✓ . . . .
@@ -106,6 +112,8 @@ For an ideal Treesitter health report:
 - vue                   ✓ . ✓ ✓ ✓
 - yaml                  ✓ ✓ ✓ ✓ ✓
 ```
+
+---
 
 ## Structure
 
