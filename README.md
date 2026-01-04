@@ -4,6 +4,27 @@ A comprehensive, portable Neovim configuration designed for efficient developmen
 
 <img width="3839" height="2081" alt="image" src="https://github.com/user-attachments/assets/3a606037-de45-47bb-8b02-3d60218d5f51" />
 
+## Installation
+
+### Quick Start
+
+Clone this repository directly into your Neovim configuration directory:
+
+```bash
+git clone https://github.com/kremeshnoi/nvim-config ~/.config/nvim
+```
+
+## Uninstallation
+
+To completely remove this configuration and all associated data:
+
+```bash
+rm -rf ~/.local/share/nvim
+rm -rf ~/.local/state/nvim
+rm -rf ~/.cache/nvim
+rm -rf ~/.config/nvim
+```
+
 ## Dependencies
 
 ### Core
