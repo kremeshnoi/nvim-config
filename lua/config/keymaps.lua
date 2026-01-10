@@ -235,6 +235,10 @@ keymap.set("i", "<C-l>", "<Right>", { desc = "Right (insert)" })
 keymap.set("i", "<C-j>", "<Down>", { desc = "Down (insert)" })
 keymap.set("i", "<C-k>", "<Up>", { desc = "Up (insert)" })
 
+-- Navigation
+vim.keymap.set({ "n", "v" }, "H", "^")
+vim.keymap.set({ "n", "v" }, "L", "$")
+
 -- VM: select next/skip + add cursor above/below
 keymap.set("n", "<M-n>", "<Plug>(VM-Find-Under)", { desc = "VM: Select next occurrence" })
 keymap.set("x", "<M-n>", "<Plug>(VM-Find-Subword-Under)", { desc = "VM: Select next occurrence" })
