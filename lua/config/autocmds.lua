@@ -34,11 +34,11 @@ local function force_black_background()
     end
     local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = name, link = false })
     if ok and hl then
-      hl.bg = "#190019"
+      hl.bg = "#000000"
       hl.ctermbg = 0
       vim.api.nvim_set_hl(0, name, hl)
     else
-      vim.api.nvim_set_hl(0, name, { bg =  "#190019", ctermbg = 0 })
+      vim.api.nvim_set_hl(0, name, { bg =  "#000000", ctermbg = 0 })
     end
     ::continue::
   end
