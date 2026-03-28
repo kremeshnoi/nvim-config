@@ -2,7 +2,6 @@ return {
   {
     "windwp/nvim-autopairs",
     event = "InsertEnter",
-    lazy = false,
     dependencies = {
       "hrsh7th/nvim-cmp",
       "nvim-treesitter/nvim-treesitter",

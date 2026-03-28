@@ -2,7 +2,7 @@ return {
   {
     "neovim/nvim-lspconfig",
     dependencies = {
-      { "williamboman/mason.nvim", config = true },
+      { "mason-org/mason.nvim" },
       { "mason-org/mason-lspconfig.nvim" },
       { "hrsh7th/cmp-nvim-lsp" },
     },

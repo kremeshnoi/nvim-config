@@ -12,6 +12,7 @@ return {
         ignore = false,
       },
       renderer = {
+        root_folder_label = false,
         highlight_git = true,
         highlight_opened_files = "none",
         icons = {
