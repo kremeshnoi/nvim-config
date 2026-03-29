@@ -38,7 +38,7 @@ local function force_black_background()
       hl.ctermbg = 0
       vim.api.nvim_set_hl(0, name, hl)
     else
-      vim.api.nvim_set_hl(0, name, { bg =  "#000000", ctermbg = 0 })
+      vim.api.nvim_set_hl(0, name, { bg = "#000000", ctermbg = 0 })
     end
     ::continue::
   end
