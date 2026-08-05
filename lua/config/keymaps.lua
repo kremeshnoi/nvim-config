@@ -1,5 +1,18 @@
 local keymap = vim.keymap
 
+local is_mac = vim.fn.has "mac" == 1 or vim.fn.has "macunix" == 1
+
+local function mod(lhs)
+  if is_mac then
+    return lhs
+  end
+  local m, rest = lhs:match "^<([CAM])%-(.+)$"
+  if not m then
+    return lhs
+  end
+  return (m == "C" and "<A-" or "<C-") .. rest
+end
+
 local function telescope()
   return require "telescope.builtin"
 end
@@ -40,18 +53,30 @@ local function smart_bdelete()
   end
 end
 
-keymap.set("n", "<C-h>", "<cmd>bprev<CR>", { desc = "Previous buffer" })
-keymap.set("n", "<C-l>", "<cmd>bnext<CR>", { desc = "Next buffer" })
-keymap.set("n", "<C-x>", smart_bdelete, { desc = "Close buffer (keep window)" })
-keymap.set("n", "<C-a>", "<cmd>%bd|e#|bd#<CR>", { desc = "Close all buffers but current" })
+keymap.set("n", mod "<C-h>", "<cmd>bprev<CR>", { desc = "Previous buffer" })
+keymap.set("n", mod "<C-l>", "<cmd>bnext<CR>", { desc = "Next buffer" })
+keymap.set("n", mod "<C-x>", smart_bdelete, { desc = "Close buffer (keep window)" })
+keymap.set("n", mod "<C-a>", "<cmd>%bd|e#|bd#<CR>", { desc = "Close all buffers but current" })
 
 -- Multi-cursor (C-n/j/k in normal/visual mode)
-keymap.set("n", "<C-n>", "<Plug>(VM-Find-Under)", { desc = "Select next occurrence" })
-keymap.set("x", "<C-n>", "<Plug>(VM-Find-Subword-Under)", { desc = "Select next occurrence" })
-keymap.set("n", "<C-j>", "<Plug>(VM-Add-Cursor-Down)", { desc = "Add cursor below" })
-keymap.set("n", "<C-k>", "<Plug>(VM-Add-Cursor-Up)", { desc = "Add cursor above" })
-keymap.set("x", "<C-j>", "<Plug>(VM-Add-Cursor-Down)", { desc = "Add cursor below" })
-keymap.set("x", "<C-k>", "<Plug>(VM-Add-Cursor-Up)", { desc = "Add cursor above" })
+keymap.set("n", mod "<C-n>", "<Plug>(VM-Find-Under)", { desc = "Select next occurrence" })
+keymap.set("x", mod "<C-n>", "<Plug>(VM-Find-Subword-Under)", { desc = "Select next occurrence" })
+keymap.set("n", mod "<C-j>", "<Plug>(VM-Add-Cursor-Down)", { desc = "Add cursor below" })
+keymap.set("n", mod "<C-k>", "<Plug>(VM-Add-Cursor-Up)", { desc = "Add cursor above" })
+keymap.set("x", mod "<C-j>", "<Plug>(VM-Add-Cursor-Down)", { desc = "Add cursor below" })
+keymap.set("x", mod "<C-k>", "<Plug>(VM-Add-Cursor-Up)", { desc = "Add cursor above" })
+
+if not is_mac then
+  for _, k in ipairs { "w", "o", "i", "d", "u", "f", "b", "e", "y", "r", "v", "g", "t", "]", "^" } do
+    keymap.set({ "n", "x" }, "<A-" .. k .. ">", "<C-" .. k .. ">", { desc = "Ctrl-" .. k })
+  end
+  for _, k in ipairs { "w", "r", "v", "o", "d", "t", "n", "p", "a", "x" } do
+    keymap.set("i", "<A-" .. k .. ">", "<C-" .. k .. ">", { desc = "Ctrl-" .. k })
+  end
+  for _, k in ipairs { "r", "w", "f", "d", "e", "v" } do
+    keymap.set("c", "<A-" .. k .. ">", "<C-" .. k .. ">", { desc = "Ctrl-" .. k })
+  end
+end
 
 -- Window splits (leader+w)
 keymap.set("n", "<leader>wl", "<cmd>vnew<CR>", { desc = "New split right" })
@@ -181,6 +206,14 @@ keymap.set("n", "<leader>G", neogit "Neogit", { desc = "Git status (Neogit)" })
 keymap.set("n", "<leader>gc", neogit "Neogit commit", { desc = "Git commit" })
 keymap.set("n", "<leader>gu", neogit "Neogit pull", { desc = "Git pull" })
 keymap.set("n", "<leader>gp", neogit "Neogit push", { desc = "Git push" })
+
+keymap.set("n", "<leader>gd", function()
+  if require("diffview.lib").get_current_view() then
+    vim.cmd "DiffviewClose"
+  else
+    vim.cmd "DiffviewOpen"
+  end
+end, { desc = "Diffview / merge tool (toggle)" })
 
 -- Git telescope
 keymap.set("n", "<leader>gs", function()
