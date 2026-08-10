@@ -40,6 +40,7 @@ return {
         "json",
         "scheme",
         "markdown",
+        "markdown_inline",
         "gitignore",
         "gitcommit",
         "dockerfile",
