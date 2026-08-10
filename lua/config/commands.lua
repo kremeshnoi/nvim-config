@@ -23,6 +23,16 @@ vim.api.nvim_create_user_command("Cfp", function()
   vim.notify(path, vim.log.levels.INFO)
 end, { desc = "Copy file path relative to project root" })
 
+vim.api.nvim_create_user_command("Cfpa", function()
+  local file = vim.fn.expand "%:p"
+  if file == "" then
+    vim.notify("No file in current buffer", vim.log.levels.WARN)
+    return
+  end
+  vim.fn.setreg("+", file)
+  vim.notify(file, vim.log.levels.INFO)
+end, { desc = "Copy absolute file path" })
+
 vim.api.nvim_create_user_command("Cfpcl", function()
   local path = relative_path()
   if not path then

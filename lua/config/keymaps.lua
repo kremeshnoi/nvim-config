@@ -34,6 +34,7 @@ keymap.set("n", "<leader>T", function()
   vim.wo.relativenumber = not vim.wo.relativenumber
 end, { desc = "Toggle relative line numbers" })
 keymap.set("n", "<leader>cp", "<cmd>Cfp<CR>", { desc = "Copy file path" })
+keymap.set("n", "<leader>cf", "<cmd>Cfpa<CR>", { desc = "Copy absolute file path" })
 keymap.set("n", "<leader>cl", "<cmd>Cfpcl<CR>", { desc = "Copy file path + current line" })
 
 keymap.set("n", "<leader>/", "gcc", { desc = "Toggle comment", remap = true })
