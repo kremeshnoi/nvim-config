@@ -12,6 +12,10 @@ return {
       "sqlfmt",
       "php-cs-fixer",
       "rubocop",
+      "ruff",
+      "google-java-format",
+      "ktlint",
+      "cljfmt",
     },
   },
   config = function(_, opts)
