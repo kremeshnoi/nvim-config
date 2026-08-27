@@ -59,6 +59,10 @@ return {
         formatters_by_ft = {
           lua = { "stylua" },
           rust = { "rustfmt" },
+          python = { "ruff_organize_imports", "ruff_format" },
+          java = { "google-java-format" },
+          kotlin = { "ktlint" },
+          clojure = { "cljfmt" },
 
           javascript = { "prettier", "eslint_d" },
           typescript = { "prettier", "eslint_d" },
@@ -72,6 +76,7 @@ return {
           markdown = { "prettier" },
           css = { "prettier" },
           scss = { "prettier" },
+          less = { "prettier" },
           html = { "prettier" },
           php = { "php_cs_fixer" },
           ruby = { "rubocop" },
