@@ -47,6 +47,8 @@ return {
           "pyright",
           "jdtls",
           "kotlin_language_server",
+          "clojure_lsp",
+          "sqls",
         },
         automatic_enable = false,
       }
@@ -231,6 +233,19 @@ return {
           capabilities = capabilities,
           on_attach = on_attach,
           filetypes = { "kotlin" },
+        },
+
+        clojure_lsp = {
+          capabilities = capabilities,
+          on_attach = on_attach,
+          filetypes = { "clojure" },
+          root_markers = { "project.clj", "deps.edn", "build.boot", "shadow-cljs.edn", "bb.edn", ".git" },
+        },
+
+        sqls = {
+          capabilities = capabilities,
+          on_attach = on_attach,
+          filetypes = { "sql", "mysql" },
         },
       }
 
