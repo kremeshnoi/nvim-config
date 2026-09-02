@@ -3,6 +3,8 @@ return {
     "stevearc/conform.nvim",
     event = { "BufReadPre", "BufNewFile" },
     opts = function()
+      local util = require "conform.util"
+
       local eslint_config_files = {
         "eslint.config.js",
         "eslint.config.cjs",
@@ -86,6 +88,11 @@ return {
           sql = { "sqlfmt" },
         },
         formatters = {
+          cljfmt = {
+            prepend_args = { "--function-arguments-indentation", "cursive" },
+            cwd = util.root_file { "deps.edn", "project.clj", "build.boot", "shadow-cljs.edn", "bb.edn", ".git" },
+          },
+
           eslint_d = {
             cwd = function(_, ctx)
               return eslint_root(ctx)
