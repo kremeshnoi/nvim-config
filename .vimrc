@@ -3,7 +3,6 @@ let mapleader=" "
 set scrolloff=5
 set incsearch
 set number
-set relativenumber
 
 noremap H ^
 noremap L $
