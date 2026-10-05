@@ -2,13 +2,14 @@ return {
   "NeogitOrg/neogit",
   dependencies = {
     "nvim-lua/plenary.nvim",
-    "sindrets/diffview.nvim",
+    "esmuellert/codediff.nvim",
     "nvim-telescope/telescope.nvim",
   },
   cmd = "Neogit",
   opts = {
+    diff_viewer = "codediff",
     integrations = {
-      diffview = true,
+      codediff = true,
       telescope = true,
     },
     graph_style = "unicode",

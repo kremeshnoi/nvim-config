@@ -205,13 +205,48 @@ keymap.set("n", "<leader>gc", neogit "Neogit commit", { desc = "Git commit" })
 keymap.set("n", "<leader>gu", neogit "Neogit pull", { desc = "Git pull" })
 keymap.set("n", "<leader>gp", neogit "Neogit push", { desc = "Git push" })
 
-keymap.set("n", "<leader>gd", function()
-  if require("diffview.lib").get_current_view() then
-    vim.cmd "DiffviewClose"
-  else
-    vim.cmd "DiffviewOpen"
+local function git_base()
+  local ref = vim.fn.systemlist({ "git", "symbolic-ref", "--quiet", "--short", "refs/remotes/origin/HEAD" })[1]
+  if vim.v.shell_error == 0 and ref and ref ~= "" then
+    return ref
   end
-end, { desc = "Diffview / merge tool (toggle)" })
+  for _, branch in ipairs { "origin/main", "origin/master", "main", "master" } do
+    vim.fn.system { "git", "rev-parse", "--verify", "--quiet", branch }
+    if vim.v.shell_error == 0 then
+      return branch
+    end
+  end
+end
+
+local function codediff(args)
+  return function()
+    local lifecycle = package.loaded["codediff.ui.lifecycle"]
+    if lifecycle and lifecycle.get_session(vim.api.nvim_get_current_tabpage()) then
+      vim.cmd "tabclose"
+      return
+    end
+    local resolved = type(args) == "function" and args() or args
+    if not resolved then
+      vim.notify("No base branch found (origin/HEAD, main, master)", vim.log.levels.WARN)
+      return
+    end
+    vim.cmd("CodeDiff " .. resolved)
+  end
+end
+
+keymap.set("n", "<leader>gd", codediff "", { desc = "Diff working tree (toggle)" })
+
+keymap.set("n", "<leader>gr", codediff(function()
+  local base = git_base()
+  return base and base .. "..."
+end), { desc = "Review branch vs base (toggle)" })
+
+keymap.set("n", "<leader>gh", codediff "history %", { desc = "File history" })
+
+keymap.set("n", "<leader>gH", codediff(function()
+  local base = git_base()
+  return base and "history " .. base .. "..HEAD --reverse"
+end), { desc = "Branch commits history" })
 
 -- Git telescope
 keymap.set("n", "<leader>gs", function()
