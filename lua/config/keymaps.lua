@@ -346,6 +346,11 @@ keymap.set("n", "<leader>yl", function()
   harpoon():list():next()
 end, { desc = "Harpoon next" })
 
+-- Database (leader+q)
+keymap.set("n", "<leader>qq", "<cmd>DBUIToggle<CR>", { desc = "Database UI (toggle)" })
+keymap.set("n", "<leader>qa", "<cmd>DBUIAddConnection<CR>", { desc = "Add DB connection" })
+keymap.set("n", "<leader>qf", "<cmd>DBUIFindBuffer<CR>", { desc = "Attach buffer to DB" })
+
 -- Tools (leader+e)
 keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
