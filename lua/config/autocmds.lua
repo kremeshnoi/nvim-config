@@ -1,69 +1,100 @@
+local accent_opacity = 0.7
+
+local untouched_patterns = {
+  "^lualine_",
+  "^Cursor$",
+  "^lCursor$",
+  "^CursorIM$",
+  "Thumb$",
+}
+
+local accent_patterns = {
+  "[Dd]iff",
+  "^Visual",
+  "Search$",
+  "^Substitute$",
+  "^MatchParen$",
+  "^WildMenu$",
+  "^QuickFixLine$",
+  "Sel$",
+  "Selection",
+  "^TelescopePreviewLine$",
+  "^TelescopePreviewMatch$",
+  "^GitSigns%a*Preview$",
+  "^GitSigns%a*Ln$",
+  "VirtLn",
+  "^GitSignsVirtLnum$",
+  "^NeogitHunk",
+  "^CodeDiff",
+  "^VM_",
+  "^MultiCursor$",
+  "^LspReference",
+  "^[Ii]lluminated",
+  "^SnippetTabstop",
+  "ActiveParameter$",
+  "^DropBarCurrentContext",
+  "^DropBarHover$",
+  "^DropBarMenuCurrentContext$",
+  "^DropBarMenuHoverEntry$",
+}
+
+local function matches_any(name, patterns)
+  for _, pattern in ipairs(patterns) do
+    if name:match(pattern) then
+      return true
+    end
+  end
+  return false
+end
+
+local function dim(color)
+  local r = math.floor(bit.rshift(color, 16) * accent_opacity)
+  local g = math.floor(bit.band(bit.rshift(color, 8), 0xff) * accent_opacity)
+  local b = math.floor(bit.band(color, 0xff) * accent_opacity)
+  return bit.bor(bit.lshift(r, 16), bit.lshift(g, 8), b)
+end
+
+local dimmed = {}
+
 local function force_transparent_background()
-  local vm_sources = {
-    VM_Mono = "IncSearch",
-    VM_Cursor = "Visual",
-    VM_Extend = "PmenuSel",
-    VM_Insert = "DiffChange",
-    VM_Selection = "Visual",
-    MultiCursor = "Visual",
-  }
-
-  local vm_preserve = {}
-  for group, source in pairs(vm_sources) do
-    local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = source, link = true })
-    if ok and hl and next(hl) ~= nil then
-      vm_preserve[group] = hl
+  for _, name in ipairs(vim.fn.getcompletion("", "highlight")) do
+    if not matches_any(name, untouched_patterns) then
+      local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = name, link = false })
+      if ok and hl and hl.bg and dimmed[name] ~= hl.bg then
+        if matches_any(name, accent_patterns) and not name:match "^NeogitDiffContext" then
+          hl.bg = dim(hl.bg)
+          dimmed[name] = hl.bg
+        else
+          hl.bg = nil
+          hl.ctermbg = nil
+        end
+        vim.api.nvim_set_hl(0, name, hl)
+      end
     end
-  end
-
-  local names = vim.fn.getcompletion("", "highlight")
-  for _, name in ipairs(names) do
-    if
-      name == "ColorColumn"
-      or name == "CurSearch"
-      or name == "DiffChange"
-      or name == "IncSearch"
-      or name == "MultiCursor"
-      or name == "PmenuSel"
-      or name == "Search"
-      or name:match "^Visual"
-      or name:match "^VM_"
-      or name:match "^VisualMulti"
-      or name:match "^lualine_"
-    then
-      goto continue
-    end
-    local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = name, link = false })
-    if ok and hl then
-      hl.bg = "NONE"
-      hl.ctermbg = "NONE"
-      vim.api.nvim_set_hl(0, name, hl)
-    else
-      vim.api.nvim_set_hl(0, name, { bg = "NONE", ctermbg = "NONE" })
-    end
-    ::continue::
-  end
-
-  for group, hl in pairs(vm_preserve) do
-    vim.api.nvim_set_hl(0, group, hl)
   end
 end
 
 local grp = vim.api.nvim_create_augroup("ForceTransparentBackground", { clear = true })
 
 local function apply()
-  vim.schedule(function()
-    force_transparent_background()
-  end)
+  vim.schedule(force_transparent_background)
 end
 
-vim.api.nvim_create_autocmd({ "VimEnter", "UIEnter", "ColorScheme" }, {
+vim.api.nvim_create_autocmd("ColorScheme", {
+  group = grp,
+  callback = function()
+    dimmed = {}
+    apply()
+  end,
+})
+
+vim.api.nvim_create_autocmd({ "VimEnter", "UIEnter" }, {
   group = grp,
   callback = apply,
 })
 
 vim.api.nvim_create_autocmd("User", {
   group = grp,
-  pattern = "LazyDone",
+  pattern = { "LazyDone", "LazyLoad" },
   callback = apply,
 })
