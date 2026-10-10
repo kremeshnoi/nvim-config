@@ -35,3 +35,5 @@ if vim.fn.has "wsl" == 1 or (vim.uv or vim.loop).os_uname().release:lower():find
     cache_enabled = 0,
   }
 end
+
+vim.o.winborder = "rounded"
