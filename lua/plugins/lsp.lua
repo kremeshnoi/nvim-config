@@ -4,14 +4,10 @@ return {
     dependencies = {
       { "mason-org/mason.nvim" },
       { "mason-org/mason-lspconfig.nvim" },
-      { "hrsh7th/cmp-nvim-lsp" },
+      { "saghen/blink.cmp" },
     },
     config = function()
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-      local ok_cmp, cmp_lsp = pcall(require, "cmp_nvim_lsp")
-      if ok_cmp then
-        capabilities = cmp_lsp.default_capabilities(capabilities)
-      end
+      local capabilities = require("blink.cmp").get_lsp_capabilities()
 
       local on_attach = function(client, bufnr)
         client.server_capabilities.documentFormattingProvider = false
