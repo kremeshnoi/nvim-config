@@ -54,7 +54,10 @@ return {
           alpha = true,
         },
       },
-      indent = { enable = false },
+      indent = {
+        enable = true,
+        chars = { "▎" },
+      },
       line_num = { enable = false },
       blank = { enable = false },
     }
