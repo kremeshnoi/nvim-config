@@ -1,5 +1,6 @@
 return {
   "esmuellert/codediff.nvim",
+  tag = "v2.49.2",
   cmd = "CodeDiff",
   opts = {
     explorer = {
