@@ -100,6 +100,19 @@ return {
           never_show = { ".git" },
         },
         follow_current_file = { enabled = true },
+        find_args = (function()
+          local exclude = {}
+          for _, dir in ipairs { ".git", "target", "node_modules", "dist", "build", ".next", ".venv" } do
+            vim.list_extend(exclude, { "--exclude", dir })
+          end
+          return { fd = exclude, fdfind = exclude }
+        end)(),
+        window = {
+          mappings = {
+            ["/"] = "fuzzy_sorter",
+            ["D"] = "fuzzy_sorter_directory",
+          },
+        },
         use_libuv_file_watcher = true,
       },
     }
