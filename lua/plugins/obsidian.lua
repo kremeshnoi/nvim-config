@@ -1,4 +1,23 @@
-local vaults = "/mnt/c/Users/Alex/iCloudDrive/Documents/Obsidian Vaults"
+local vault_roots = {
+  vim.env.OBSIDIAN_VAULTS or "",
+  "/mnt/c/Users/Alex/iCloudDrive/Documents/Obsidian Vaults",
+  vim.fn.expand "~/Documents",
+}
+
+local function find_workspaces()
+  local workspaces = {}
+  for _, root in ipairs(vault_roots) do
+    if root ~= "" then
+      for _, marker in ipairs(vim.fn.glob(root .. "/*/.obsidian", false, true)) do
+        local path = vim.fs.dirname(marker)
+        table.insert(workspaces, { name = vim.fs.basename(path), path = path })
+      end
+    end
+  end
+  return workspaces
+end
+
+local workspaces = find_workspaces()
 
 local function apply_conceal(enabled)
   for _, win in ipairs(vim.api.nvim_list_wins()) do
@@ -31,6 +50,7 @@ end
 return {
   "obsidian-nvim/obsidian.nvim",
   version = "*",
+  cond = #workspaces > 0,
   ft = { "markdown" },
   cmd = { "Obsidian" },
   dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim" },
@@ -52,11 +72,7 @@ return {
   },
   opts = {
     legacy_commands = false,
-    workspaces = {
-      { name = "Computer Science", path = vaults .. "/Computer Science" },
-      { name = "Personal", path = vaults .. "/Personal" },
-      { name = "Media", path = vaults .. "/Media" },
-    },
+    workspaces = workspaces,
     new_notes_location = "current_dir",
     note_id_func = function(title)
       if title and title ~= "" then
