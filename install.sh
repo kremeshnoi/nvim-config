@@ -264,7 +264,8 @@ install_nerd_font() {
 
 install_rmnvim() {
   log "Installing rmnvim helper..."
-  sudo tee /usr/local/bin/rmnvim > /dev/null <<'EOF'
+  mkdir -p "$HOME/.local/bin"
+  tee "$HOME/.local/bin/rmnvim" > /dev/null <<'EOF'
 #!/usr/bin/env bash
 REPO="$HOME/dev/nvim-config"
 TARGET="$HOME/.config/nvim"
@@ -286,7 +287,7 @@ cp -R "$REPO/." "$TARGET/"
 
 echo "Neovim configuration reset complete!"
 EOF
-  sudo chmod +x /usr/local/bin/rmnvim
+  chmod +x "$HOME/.local/bin/rmnvim"
 }
 
 main() {
