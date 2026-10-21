@@ -169,22 +169,6 @@ return {
           },
         },
 
-        rust_analyzer = {
-          capabilities = capabilities,
-          on_attach = on_attach,
-          filetypes = { "rust" },
-          settings = {
-            ["rust-analyzer"] = {
-              cargo = { allFeatures = true },
-              checkOnSave = true,
-              check = {
-                command = "check",
-              },
-              procMacro = { enable = true },
-            },
-          },
-        },
-
         intelephense = {
           capabilities = capabilities,
           on_attach = on_attach,

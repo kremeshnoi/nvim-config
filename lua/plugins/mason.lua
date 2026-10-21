@@ -15,6 +15,7 @@ return {
       "google-java-format",
       "ktlint",
       "cljfmt",
+      "codelldb",
     },
   },
   config = function(_, opts)
