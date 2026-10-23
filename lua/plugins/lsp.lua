@@ -39,7 +39,6 @@ return {
           "lua_ls",
           "rust_analyzer",
           "intelephense",
-          "ruby_lsp",
           "pyright",
           "jdtls",
           "kotlin_language_server",
