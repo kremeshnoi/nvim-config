@@ -32,10 +32,6 @@ local accent_patterns = {
   "^[Ii]lluminated",
   "^SnippetTabstop",
   "ActiveParameter$",
-  "^DropBarCurrentContext",
-  "^DropBarHover$",
-  "^DropBarMenuCurrentContext$",
-  "^DropBarMenuHoverEntry$",
 }
 
 local function matches_any(name, patterns)

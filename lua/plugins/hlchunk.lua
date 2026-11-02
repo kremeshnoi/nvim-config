@@ -47,7 +47,6 @@ return {
           gitcommit = true,
           help = true,
           checkhealth = true,
-          dropbar_menu = true,
           notify = true,
           noice = true,
           dashboard = true,

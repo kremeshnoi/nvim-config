@@ -17,10 +17,6 @@ local function telescope()
   return require "telescope.builtin"
 end
 
-local function refactoring()
-  return require "refactoring"
-end
-
 local function neogit(cmd)
   return function()
     require("lazy").load { plugins = { "neogit" } }
@@ -119,22 +115,12 @@ keymap.set("n", "<leader>fr", function()
   telescope().oldfiles { only_cwd = true }
 end, { desc = "Recent Files" })
 
-keymap.set("n", "<leader>ft", "<cmd>TodoTelescope<CR>", { desc = "TODO" })
-
 -- Diagnostics list (global, not buffer-LSP-bound)
 keymap.set("n", "<leader>dq", function()
   telescope().diagnostics { bufnr = nil }
 end, { desc = "Diagnostics list" })
 
 -- Refactoring (leader+r)
-keymap.set("n", "<leader>rr", function()
-  require("grug-far").open { prefills = { paths = vim.fn.expand "%" } }
-end, { desc = "Replace (current file)" })
-
-keymap.set("n", "<leader>rp", function()
-  require("grug-far").open()
-end, { desc = "Replace in Path (project)" })
-
 keymap.set("n", "<leader>re", vim.lsp.buf.rename, { desc = "Rename Element" })
 
 keymap.set("n", "<leader>ro", function()
@@ -147,30 +133,6 @@ keymap.set("n", "<leader>ro", function()
   local new_path = dir .. "/" .. new
   vim.lsp.util.rename(old, new_path)
 end, { desc = "Rename File" })
-
-keymap.set({ "n", "x" }, "<leader>ri", function()
-  refactoring().refactor "Inline Variable"
-end, { desc = "Inline" })
-
-keymap.set({ "n", "x" }, "<leader>rm", function()
-  refactoring().refactor "Extract Function To File"
-end, { desc = "Move (extract to file)" })
-
-keymap.set({ "n", "x" }, "<leader>rv", function()
-  refactoring().refactor "Extract Variable"
-end, { desc = "Extract variable" })
-
-keymap.set({ "n", "x" }, "<leader>rf", function()
-  refactoring().refactor "Extract Function"
-end, { desc = "Extract function" })
-
-keymap.set({ "n", "x" }, "<leader>rb", function()
-  refactoring().refactor "Extract Block"
-end, { desc = "Extract block" })
-
-keymap.set({ "n", "x" }, "<leader>R", function()
-  refactoring().select_refactor()
-end, { desc = "Select refactor" })
 
 -- LSP (leader+d)
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -346,11 +308,6 @@ keymap.set("n", "<leader>yl", function()
   harpoon():list():next()
 end, { desc = "Harpoon next" })
 
--- Database (leader+q)
-keymap.set("n", "<leader>qq", "<cmd>DBUIToggle<CR>", { desc = "Database UI (toggle)" })
-keymap.set("n", "<leader>qa", "<cmd>DBUIAddConnection<CR>", { desc = "Add DB connection" })
-keymap.set("n", "<leader>qf", "<cmd>DBUIFindBuffer<CR>", { desc = "Attach buffer to DB" })
-
 -- Tools (leader+e)
 keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
@@ -359,45 +316,6 @@ keymap.set("n", "<leader>t", "<cmd>terminal<CR>i", { desc = "Terminal (here)" })
 keymap.set("n", "<leader>n", "<cmd>Neotree toggle position=left<CR>", { desc = "Project (Neo-tree)" })
 
 keymap.set("n", "<leader>N", "<cmd>Neotree toggle position=float<CR>", { desc = "Project popup (Neo-tree float)" })
-
--- Debug (leader+x)
-local function dap()
-  return require "dap"
-end
-
-keymap.set("n", "<leader>xb", function()
-  dap().toggle_breakpoint()
-end, { desc = "Toggle breakpoint" })
-keymap.set("n", "<leader>xB", function()
-  dap().set_breakpoint(vim.fn.input "Condition: ")
-end, { desc = "Conditional breakpoint" })
-keymap.set("n", "<leader>xc", function()
-  dap().continue()
-end, { desc = "Start / continue" })
-keymap.set("n", "<leader>xn", function()
-  dap().step_over()
-end, { desc = "Step over" })
-keymap.set("n", "<leader>xi", function()
-  dap().step_into()
-end, { desc = "Step into" })
-keymap.set("n", "<leader>xo", function()
-  dap().step_out()
-end, { desc = "Step out" })
-keymap.set("n", "<leader>xC", function()
-  dap().run_to_cursor()
-end, { desc = "Run to cursor" })
-keymap.set("n", "<leader>xr", function()
-  dap().restart()
-end, { desc = "Restart" })
-keymap.set("n", "<leader>xq", function()
-  dap().terminate()
-end, { desc = "Terminate" })
-keymap.set("n", "<leader>xv", function()
-  require("dap-view").toggle()
-end, { desc = "Toggle debug view" })
-keymap.set({ "n", "v" }, "<leader>xe", function()
-  require("dap-view").add_expr()
-end, { desc = "Watch expression" })
 
 -- Tests (leader+u)
 local function neotest()
@@ -416,9 +334,6 @@ end, { desc = "Run all tests" })
 keymap.set("n", "<leader>ul", function()
   neotest().run.run_last()
 end, { desc = "Run last test" })
-keymap.set("n", "<leader>ud", function()
-  neotest().run.run { strategy = "dap" }
-end, { desc = "Debug nearest test" })
 keymap.set("n", "<leader>ux", function()
   neotest().run.stop()
 end, { desc = "Stop tests" })
