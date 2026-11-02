@@ -6,6 +6,8 @@ set number
 
 noremap H ^
 noremap L $
+noremap J H
+noremap K L
 
 inoremap <C-h> <Left>
 inoremap <C-l> <Right>
