@@ -16,7 +16,6 @@ opt.foldenable = false
 opt.foldmethod = "manual"
 opt.foldlevel = 99
 opt.foldlevelstart = 99
-opt.fillchars:append { eob = " " }
 opt.splitright = true
 opt.colorcolumn = "+1"
 
